@@ -20,40 +20,6 @@ lib:
 tests: lib
 	$(MAKE) -C tests
 
-ifndef WINDOWS
-install: no_test
-	mkdir -p $(DESTDIR)/include/mbedtls
-	cp -r include/mbedtls $(DESTDIR)/include
-	
-	mkdir -p $(DESTDIR)/lib
-	cp -RP library/libmbedtls.*    $(DESTDIR)/lib
-	cp -RP library/libmbedx509.*   $(DESTDIR)/lib
-	cp -RP library/libmbedcrypto.* $(DESTDIR)/lib
-	
-	mkdir -p $(DESTDIR)/bin
-	for p in programs/*/* ; do              \
-	    if [ -x $$p ] && [ ! -d $$p ] ;     \
-	    then                                \
-	        f=$(PREFIX)`basename $$p` ;     \
-	        cp $$p $(DESTDIR)/bin/$$f ;     \
-	    fi                                  \
-	done
-
-uninstall:
-	rm -rf $(DESTDIR)/include/mbedtls
-	rm -f $(DESTDIR)/lib/libmbedtls.*
-	rm -f $(DESTDIR)/lib/libmbedx509.*
-	rm -f $(DESTDIR)/lib/libmbedcrypto.*
-	
-	for p in programs/*/* ; do              \
-	    if [ -x $$p ] && [ ! -d $$p ] ;     \
-	    then                                \
-	        f=$(PREFIX)`basename $$p` ;     \
-	        rm -f $(DESTDIR)/bin/$$f ;      \
-	    fi                                  \
-	done
-endif
-
 WARNING_BORDER      =*******************************************************\n
 NULL_ENTROPY_WARN_L1=****  WARNING!  MBEDTLS_TEST_NULL_ENTROPY defined! ****\n
 NULL_ENTROPY_WARN_L2=****  THIS BUILD HAS NO DEFINED ENTROPY SOURCES    ****\n
