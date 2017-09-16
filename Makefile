@@ -17,8 +17,8 @@ programs: lib
 lib:
 	$(MAKE) -C library
 
-tests: lib
-	$(MAKE) -C tests
+#tests: lib
+#	$(MAKE) -C tests
 
 WARNING_BORDER      =*******************************************************\n
 NULL_ENTROPY_WARN_L1=****  WARNING!  MBEDTLS_TEST_NULL_ENTROPY defined! ****\n
