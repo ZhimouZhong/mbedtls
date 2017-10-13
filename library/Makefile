@@ -34,6 +34,7 @@ endif
 SOEXT_TLS=so.10
 SOEXT_X509=so.0
 SOEXT_CRYPTO=so.0
+SOEXT_UNITY=so.0
 
 DLEXT=so
 # OSX shared library extension:
@@ -74,6 +75,8 @@ OBJS_TLS=	debug.o		net_sockets.o		\
 		ssl_srv.o	ssl_ticket.o		\
 		ssl_tls.o
 
+OBJS_UNITY= unity_mbedtls_api.o
+
 .SILENT:
 
 .PHONY: all static shared clean
@@ -84,9 +87,9 @@ else
 all: shared static
 endif
 
-static: libmbedcrypto.a libmbedx509.a libmbedtls.a
+static: libmbedcrypto.a libmbedx509.a libmbedtls.a libmbedunity.a
 
-shared: libmbedcrypto.$(DLEXT) libmbedx509.$(DLEXT) libmbedtls.$(DLEXT)
+shared: libmbedcrypto.$(DLEXT) libmbedx509.$(DLEXT) libmbedtls.$(DLEXT) libmbedunity.$(DLEXT)
 
 # tls
 libmbedtls.a: $(OBJS_TLS)
@@ -156,6 +159,29 @@ libmbedcrypto.dylib: $(OBJS_CRYPTO)
 libmbedcrypto.dll: $(OBJS_CRYPTO)
 	echo "  LD    $@"
 	$(CC) -shared -Wl,-soname,$@ -Wl,--out-implib,$@.a -o $@ $(OBJS_CRYPTO) -lws2_32 -lwinmm -lgdi32 -static-libgcc $(LOCAL_LDFLAGS) $(LDFLAGS)
+
+# unity
+libmbedunity.a: $(OBJS_UNITY)
+	echo "  AR    $@"
+	$(AR) -rc $@ $(OBJS_UNITY)
+	echo "  RL    $@"
+	$(AR) -s $@
+
+libmbedunity.$(SOEXT_UNITY): $(OBJS_UNITY)
+	echo "  LD    $@"
+	$(CC) -shared -Wl,-soname,$@ $(LOCAL_LDFLAGS) $(LDFLAGS) -o $@ $(OBJS_UNITY)
+
+libmbedunity.so: libmbedunity.$(SOEXT_UNITY)
+	echo "  LN    $@ -> $<"
+	ln -sf $< $@
+
+libmbedunity.dylib: $(OBJS_UNITY)
+	echo "  LD    $@"
+	$(CC) -dynamiclib $(LOCAL_LDFLAGS) $(LDFLAGS) -o $@ $(OBJS_UNITY)
+
+libmbedunity.dll: $(OBJS_UNITY)
+	echo "  LD    $@"
+	$(CC) -shared -Wl,-soname,$@ -Wl,--out-implib,$@.a -o $@ $(OBJS_UNITY) -lws2_32 -lwinmm -lgdi32 -static-libgcc $(LOCAL_LDFLAGS) $(LDFLAGS)
 
 .c.o:
 	echo "  CC    $<"

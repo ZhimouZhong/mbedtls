@@ -215,6 +215,7 @@
     <ClInclude Include="..\..\include\mbedtls\ssl_ticket.h" />
     <ClInclude Include="..\..\include\mbedtls\threading.h" />
     <ClInclude Include="..\..\include\mbedtls\timing.h" />
+    <ClInclude Include="..\..\include\mbedtls\unity_mbedtls_api.h" />
     <ClInclude Include="..\..\include\mbedtls\version.h" />
     <ClInclude Include="..\..\include\mbedtls\x509.h" />
     <ClInclude Include="..\..\include\mbedtls\x509_crl.h" />
@@ -284,6 +285,7 @@
     <ClCompile Include="..\..\library\ssl_tls.c" />
     <ClCompile Include="..\..\library\threading.c" />
     <ClCompile Include="..\..\library\timing.c" />
+    <ClCompile Include="..\..\library\unity_mbedtls_api.c" />
     <ClCompile Include="..\..\library\version.c" />
     <ClCompile Include="..\..\library\version_features.c" />
     <ClCompile Include="..\..\library\x509.c" />
