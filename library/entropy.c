@@ -260,6 +260,10 @@ int mbedtls_entropy_update_manual( mbedtls_entropy_context *ctx,
 /*
  * Run through the different sources to add entropy to our accumulator
  */
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wconditional-uninitialized"
+#endif
 static int entropy_gather_internal( mbedtls_entropy_context *ctx )
 {
     int ret, i, have_one_strong = 0;
@@ -304,6 +308,9 @@ cleanup:
 
     return( ret );
 }
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 
 /*
  * Thread-safe wrapper for entropy_gather_internal()

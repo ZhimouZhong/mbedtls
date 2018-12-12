@@ -70,6 +70,10 @@ void mbedtls_hmac_drbg_init( mbedtls_hmac_drbg_context *ctx )
 /*
  * HMAC_DRBG update, using optional additional data (10.1.2.2)
  */
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wconditional-uninitialized"
+#endif
 int mbedtls_hmac_drbg_update_ret( mbedtls_hmac_drbg_context *ctx,
                                   const unsigned char *additional,
                                   size_t add_len )
@@ -114,6 +118,9 @@ exit:
     mbedtls_zeroize( K, sizeof( K ) );
     return( ret );
 }
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 
 void mbedtls_hmac_drbg_update( mbedtls_hmac_drbg_context *ctx,
                                const unsigned char *additional,
