@@ -3399,6 +3399,12 @@ cleanup:
 /* Adjust the exponent to be a valid private point for the specified curve.
  * This is sometimes necessary because we use a single set of exponents
  * for all curves but the validity of values depends on the curve. */
+
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4065)
+#endif
+
 static int self_test_adjust_exponent( const mbedtls_ecp_group *grp,
                                       mbedtls_mpi *m )
 {
@@ -3431,6 +3437,10 @@ static int self_test_adjust_exponent( const mbedtls_ecp_group *grp,
 cleanup:
     return( ret );
 }
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 /* Calculate R = m.P for each m in exponents. Check that the number of
  * basic operations doesn't depend on the value of m. */
