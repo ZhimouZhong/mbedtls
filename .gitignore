@@ -1,6 +1,9 @@
 # Random seed file created by test scripts and sample programs
 seedfile
 
+# revision file used when creating builds.7z
+gitrevision.txt
+
 # CMake build artifacts:
 CMakeCache.txt
 CMakeFiles
