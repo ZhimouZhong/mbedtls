@@ -22,6 +22,7 @@
 #else
 #include MBEDTLS_CONFIG_FILE
 #endif
+#include "mbedtls/debug.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,7 +44,9 @@ int main( void )
 #include <stdint.h>
 #include <stdarg.h>
 #include <string.h>
+#if defined(MBEDTLS_HAVE_TIME)
 #include <time.h>
+#endif
 #include "mbedtls/ssl.h"
 #include "mbedtls/error.h"
 #include "mbedtls/base64.h"
@@ -164,6 +167,7 @@ void printf_dbg( const char *str, ... )
     }
 }
 
+MBEDTLS_PRINTF_ATTRIBUTE( 1, 2 )
 void printf_err( const char *str, ... )
 {
     va_list args;
@@ -222,7 +226,13 @@ void parse_arguments( int argc, char *argv[] )
                 error_exit();
             }
 
-            if( ( b64_file = fopen( argv[i], "r" ) ) == NULL )
+            if( NULL != b64_file )
+            {
+                printf_err( "Cannot specify more than one file with -f\n" );
+                error_exit( );
+            }
+
+            if( ( b64_file = fopen( argv[i], "r" )) == NULL )
             {
                 printf_err( "Cannot find file \"%s\"\n", argv[i] );
                 error_exit();
@@ -302,10 +312,11 @@ void print_hex( const uint8_t *b, size_t len,
 /*
  *  Print the value of time_t in format e.g. 2020-01-23 13:05:59
  */
-void print_time( const time_t *time )
+void print_time( const uint64_t *time )
 {
+#if defined(MBEDTLS_HAVE_TIME)
     char buf[20];
-    struct tm *t = gmtime( time );
+    struct tm *t = gmtime( (time_t*) time );
     static const char format[] = "%Y-%m-%d %H:%M:%S";
     if( NULL != t )
     {
@@ -316,6 +327,10 @@ void print_time( const time_t *time )
     {
         printf( "unknown\n" );
     }
+#else
+    (void) time;
+    printf( "not supported\n" );
+#endif
 }
 
 /*
@@ -464,7 +479,8 @@ size_t read_next_b64_code( uint8_t **b64, size_t *max_len )
             }
             else if( len > *max_len )
             {
-                printf_err( "The code found is too large by %u bytes.\n", len - *max_len );
+                printf_err( "The code found is too large by %" MBEDTLS_PRINTF_SIZET " bytes.\n",
+                            len - *max_len );
                 len = pad = 0;
             }
             else if( len % 4 != 0 )
@@ -600,7 +616,7 @@ void print_deserialized_ssl_session( const uint8_t *ssl, uint32_t len,
                 ( (uint64_t) ssl[7] );
         ssl += 8;
         printf( "\tstart time     : " );
-        print_time( (time_t*) &start );
+        print_time( &start );
     }
 
     CHECK_SSL_END( 2 );
