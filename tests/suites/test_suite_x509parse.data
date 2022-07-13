@@ -211,7 +211,7 @@ depends_on:MBEDTLS_PEM_PARSE_C:MBEDTLS_MD2_C:MBEDTLS_RSA_C
 mbedtls_x509_crl_info:"data_files/crl_md2.pem":"CRL version   \: 1\nissuer name   \: C=NL, O=PolarSSL, CN=PolarSSL Test CA\nthis update   \: 2009-07-19 19\:56\:37\nnext update   \: 2009-09-17 19\:56\:37\nRevoked certificates\:\nserial number\: 01 revocation date\: 2009-02-09 21\:12\:36\nserial number\: 03 revocation date\: 2009-02-09 21\:12\:36\nsigned using  \: RSA with MD2\n"
 
 X509 CRL Information MD4 Digest
-depends_on:MBEDTLS_PEM_PARSE_C:MBEDTLS_MD4_C
+depends_on:MBEDTLS_PEM_PARSE_C:MBEDTLS_MD4_C:MBEDTLS_RSA_C
 mbedtls_x509_crl_info:"data_files/crl_md4.pem":"CRL version   \: 1\nissuer name   \: C=NL, O=PolarSSL, CN=PolarSSL Test CA\nthis update   \: 2011-02-12 14\:44\:07\nnext update   \: 2011-04-13 14\:44\:07\nRevoked certificates\:\nserial number\: 01 revocation date\: 2011-02-12 14\:44\:07\nserial number\: 03 revocation date\: 2011-02-12 14\:44\:07\nsigned using  \: RSA with MD4\n"
 
 X509 CRL Information MD5 Digest
@@ -318,6 +318,10 @@ X509 CSR Information RSA with SHA512
 depends_on:MBEDTLS_PEM_PARSE_C:MBEDTLS_SHA512_C:MBEDTLS_RSA_C
 mbedtls_x509_csr_info:"data_files/server1.req.sha512":"CSR version   \: 1\nsubject name  \: C=NL, O=PolarSSL, CN=PolarSSL Server 1\nsigned using  \: RSA with SHA-512\nRSA key size  \: 2048 bits\n"
 
+X509 CSR Information RSA with SHA-256, containing commas
+depends_on:MBEDTLS_PEM_PARSE_C:MBEDTLS_SHA256_C:MBEDTLS_RSA_C:MBEDTS_X509_INFO
+mbedtls_x509_csr_info:"data_files/server1.req.commas.sha256":"CSR version   \: 1\nsubject name  \: C=NL, O=PolarSSL\, Commas, CN=PolarSSL Server 1\nsigned using  \: RSA with SHA-256\nRSA key size  \: 2048 bits\n"
+
 X509 CSR Information EC with SHA1
 depends_on:MBEDTLS_ECDSA_C:MBEDTLS_PEM_PARSE_C:MBEDTLS_ECP_DP_SECP256R1_ENABLED:MBEDTLS_SHA1_C
 mbedtls_x509_csr_info:"data_files/server5.req.sha1":"CSR version   \: 1\nsubject name  \: C=NL, O=PolarSSL, CN=localhost\nsigned using  \: ECDSA with SHA1\nEC key size   \: 256 bits\n"
@@ -398,6 +402,30 @@ mbedtls_x509_dn_gets:"data_files/server2.crt":"subject":"C=NL, O=PolarSSL, CN=lo
 X509 Get Distinguished Name #4
 depends_on:MBEDTLS_PEM_PARSE_C:MBEDTLS_RSA_C:MBEDTLS_SHA1_C
 mbedtls_x509_dn_gets:"data_files/server2.crt":"issuer":"C=NL, O=PolarSSL, CN=PolarSSL Test CA"
+
+X509 Get Distinguished Name #5
+depends_on:MBEDTLS_PEM_PARSE_C:MBEDTLS_RSA_C:MBEDTLS_SHA1_C
+mbedtls_x509_dn_gets:"data_files/server1.commas.crt":"subject":"C=NL, O=PolarSSL\, Commas, CN=PolarSSL Server 1"
+
+X509 Get Modified DN #1
+depends_on:MBEDTLS_PEM_PARSE_C:MBEDTLS_RSA_C:MBEDTLS_SHA1_C
+mbedtls_x509_dn_gets_subject_replace:"data_files/server1.crt":"Modified":"C=NL, O=Modified, CN=PolarSSL Server 1":0
+
+X509 Get Modified DN #2 Name exactly 255 bytes
+depends_on:MBEDTLS_PEM_PARSE_C:MBEDTLS_RSA_C:MBEDTLS_SHA1_C
+mbedtls_x509_dn_gets_subject_replace:"data_files/server1.crt":"123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345":"C=NL, O=123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345, CN=PolarSSL Server 1":0
+
+X509 Get Modified DN #3 Name exceeds 255 bytes
+depends_on:MBEDTLS_PEM_PARSE_C:MBEDTLS_RSA_C:MBEDTLS_SHA1_C
+mbedtls_x509_dn_gets_subject_replace:"data_files/server1.crt":"1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456":"":MBEDTLS_ERR_X509_BUFFER_TOO_SMALL
+
+X509 Get Modified DN #4 Name exactly 255 bytes, with comma requiring escaping
+depends_on:MBEDTLS_PEM_PARSE_C:MBEDTLS_RSA_C:MBEDTLS_SHA1_C
+mbedtls_x509_dn_gets_subject_replace:"data_files/server1.crt":"1234567890,1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234":"":MBEDTLS_ERR_X509_BUFFER_TOO_SMALL
+
+X509 Get Modified DN #5 Name exactly 255 bytes, ending with comma requiring escaping
+depends_on:MBEDTLS_PEM_PARSE_C:MBEDTLS_RSA_C:MBEDTLS_SHA1_C
+mbedtls_x509_dn_gets_subject_replace:"data_files/server1.crt":"12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234,":"":MBEDTLS_ERR_X509_BUFFER_TOO_SMALL
 
 X509 Time Expired #1
 depends_on:MBEDTLS_PEM_PARSE_C:MBEDTLS_RSA_C:MBEDTLS_HAVE_TIME_DATE:MBEDTLS_SHA1_C
@@ -559,12 +587,8 @@ X509 CRT verification #14 (Valid Cert SHA1 Digest explicitly allowed in profile)
 depends_on:MBEDTLS_SHA1_C:MBEDTLS_PEM_PARSE_C:MBEDTLS_SHA1_C:MBEDTLS_RSA_C:MBEDTLS_PKCS1_V15
 x509_verify:"data_files/cert_sha1.crt":"data_files/test-ca.crt":"data_files/crl.pem":"NULL":0:0:"compat":"NULL"
 
-X509 CRT verification #14 (Valid Cert SHA1 Digest allowed in compile-time default profile)
-depends_on:MBEDTLS_SHA1_C:MBEDTLS_PEM_PARSE_C:MBEDTLS_SHA1_C:MBEDTLS_RSA_C:MBEDTLS_PKCS1_V15:MBEDTLS_TLS_DEFAULT_ALLOW_SHA1_IN_CERTIFICATES
-x509_verify:"data_files/cert_sha1.crt":"data_files/test-ca.crt":"data_files/crl.pem":"NULL":0:0:"":"NULL"
-
 X509 CRT verification #14 (Valid Cert SHA1 Digest forbidden in default profile)
-depends_on:MBEDTLS_SHA1_C:MBEDTLS_PEM_PARSE_C:MBEDTLS_SHA1_C:MBEDTLS_RSA_C:MBEDTLS_PKCS1_V15:!MBEDTLS_TLS_DEFAULT_ALLOW_SHA1_IN_CERTIFICATES
+depends_on:MBEDTLS_SHA1_C:MBEDTLS_PEM_PARSE_C:MBEDTLS_SHA1_C:MBEDTLS_RSA_C:MBEDTLS_PKCS1_V15
 x509_verify:"data_files/cert_sha1.crt":"data_files/test-ca.crt":"data_files/crl.pem":"NULL":MBEDTLS_ERR_X509_CERT_VERIFY_FAILED:MBEDTLS_X509_BADCRL_BAD_MD | MBEDTLS_X509_BADCERT_BAD_MD:"":"NULL"
 
 X509 CRT verification #15 (Valid Cert SHA224 Digest)

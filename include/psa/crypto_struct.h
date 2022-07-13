@@ -175,9 +175,6 @@ typedef struct
 {
     uint8_t *info;
     size_t info_length;
-    psa_mac_operation_t hmac;
-    uint8_t prk[PSA_HASH_MAX_SIZE];
-    uint8_t output_block[PSA_HASH_MAX_SIZE];
 #if PSA_HASH_MAX_SIZE > 0xff
 #error "PSA_HASH_MAX_SIZE does not fit in uint8_t"
 #endif
@@ -185,6 +182,9 @@ typedef struct
     uint8_t block_number;
     unsigned int state : 2;
     unsigned int info_set : 1;
+    uint8_t output_block[PSA_HASH_MAX_SIZE];
+    uint8_t prk[PSA_HASH_MAX_SIZE];
+    struct psa_mac_operation_s hmac;
 } psa_hkdf_key_derivation_t;
 #endif /* MBEDTLS_PSA_BUILTIN_ALG_HKDF */
 
@@ -442,7 +442,7 @@ static inline void psa_set_key_type(psa_key_attributes_t *attributes,
     }
     else
     {
-        /* Call the bigger function to free the old domain paramteres.
+        /* Call the bigger function to free the old domain parameters.
          * Ignore any errors which may arise due to type requiring
          * non-default domain parameters, since this function can't
          * report errors. */

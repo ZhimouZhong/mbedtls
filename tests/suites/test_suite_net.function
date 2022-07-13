@@ -9,11 +9,11 @@
 #endif
 
 #if defined(MBEDTLS_PLATFORM_IS_UNIXLIKE)
-#include <sys/fcntl.h>
 #include <sys/resource.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/types.h>
+#include <fcntl.h>
 #include <unistd.h>
 #endif
 
@@ -28,7 +28,7 @@
  *                      On success, it refers to the opened file (\p wanted_fd).
  * \param wanted_fd     The desired file descriptor.
  *
- * \return              \c 0 on succes, a negative error code on error.
+ * \return              \c 0 on success, a negative error code on error.
  */
 static int open_file_on_fd( mbedtls_net_context *ctx, int wanted_fd )
 {
