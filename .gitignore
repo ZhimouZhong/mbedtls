@@ -1,5 +1,7 @@
 # Random seed file created by test scripts and sample programs
 seedfile
+# MBEDTLS_PSA_INJECT_ENTROPY seed file created by the test framework
+00000000ffffff52.psa_its
 
 # revision file used when creating builds.7z
 gitrevision.txt
@@ -30,6 +32,9 @@ massif-*
 .cproject
 .project
 /.settings
+
+# Unix-like build artifacts:
+*.o
 
 # MSVC build artifacts:
 *.exe
@@ -68,3 +73,6 @@ massif-*
 /TAGS
 /cscope*.out
 /tags
+
+# Clangd compilation database
+compile_commands.json
