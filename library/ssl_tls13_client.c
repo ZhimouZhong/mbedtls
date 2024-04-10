@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  TLS 1.3 client-side functions
  *
  *  Copyright The Mbed TLS Contributors
@@ -2800,7 +2800,7 @@ static int ssl_tls13_parse_new_session_ticket_exts(mbedtls_ssl_context *ssl,
                 }
                 break;
 #endif /* MBEDTLS_SSL_EARLY_DATA */
-
+            case 0:
             default:
                 MBEDTLS_SSL_PRINT_EXT(
                     3, MBEDTLS_SSL_HS_NEW_SESSION_TICKET,

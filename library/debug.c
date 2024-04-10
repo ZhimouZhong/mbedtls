@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Debugging routines
  *
  *  Copyright The Mbed TLS Contributors
@@ -453,6 +453,7 @@ void mbedtls_debug_printf_ecdh(const mbedtls_ssl_context *ssl, int level,
     mbedtls_debug_printf_ecdh_internal(ssl, level, file, line, ecdh, attr);
 #else
     switch (ecdh->var) {
+        case 0:
         default:
             mbedtls_debug_printf_ecdh_internal(ssl, level, file, line, ecdh,
                                                attr);
