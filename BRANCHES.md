@@ -24,6 +24,11 @@ the API of 3.(x+1) is backward compatible with 3.x). We only break API
 compatibility on major version changes (e.g. from 3.x to 4.0). We also maintain
 ABI compatibility within LTS branches; see the next section for details.
 
+We will make regular LTS releases on an 18-month cycle, each of which will have
+a 3 year support lifetime. On this basis, 3.6 LTS (released March 2024) will be
+supported until March 2027. The next LTS release will be a 4.x release, which is
+planned for September 2025.
+
 ## Backwards Compatibility for application code
 
 We maintain API compatibility in released versions of Mbed TLS. If you have
@@ -33,7 +38,6 @@ modification with any later release x.y'.z' with the same major version
 number, and your code will still build, be secure, and work.
 
 Note that this guarantee only applies if you either use the default
-
 compile-time configuration (`mbedtls/mbedtls_config.h`) or the same modified
 compile-time configuration. Changing compile-time configuration options can
 result in an incompatible API or ABI, although features will generally not

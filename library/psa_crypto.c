@@ -631,12 +631,6 @@ psa_status_t psa_validate_unstructured_key_bit_size(psa_key_type_t type,
             }
             break;
 #endif
-#if defined(PSA_WANT_KEY_TYPE_ARIA)
-        case PSA_KEY_TYPE_ARIA:
-            if( bits != 128 && bits != 192 && bits != 256 )
-                return( PSA_ERROR_INVALID_ARGUMENT );
-            break;
-#endif
 #if defined(PSA_WANT_KEY_TYPE_CAMELLIA)
         case PSA_KEY_TYPE_CAMELLIA:
             if (bits != 128 && bits != 192 && bits != 256) {
@@ -1311,17 +1305,6 @@ psa_status_t psa_destroy_key(mbedtls_svc_key_id_t key)
     }
 
     if (PSA_KEY_LIFETIME_IS_READ_ONLY(slot->attr.lifetime)) {
-        /* Refuse the destruction of a read-only key (which may or may not work
-         * if we attempt it, depending on whether the key is merely read-only
-         * by policy or actually physically read-only).
-         * Just do the best we can, which is to wipe the copy in memory
-         * (done in this function's cleanup code). */
-        overall_status = PSA_ERROR_NOT_PERMITTED;
-        goto exit;
-    }
-
-    if( PSA_KEY_LIFETIME_IS_READ_ONLY( slot->attr.lifetime ) )
-    {
         /* Refuse the destruction of a read-only key (which may or may not work
          * if we attempt it, depending on whether the key is merely read-only
          * by policy or actually physically read-only).

@@ -402,8 +402,10 @@ int mbedtls_nist_kw_unwrap(mbedtls_nist_kw_context *ctx,
         }
 
         Plen = MBEDTLS_GET_UINT32_BE(A, KW_SEMIBLOCK_LENGTH / 2);
+
         /*
          * Plen is the length of the plaintext, when the input is valid.
+         * If Plen is larger than the plaintext and padding, padlen will be
          * larger than 8, because of the type wrap around.
          */
         padlen = in_len - KW_SEMIBLOCK_LENGTH - Plen;

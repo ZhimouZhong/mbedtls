@@ -404,11 +404,6 @@ int mbedtls_cipher_setkey(mbedtls_cipher_context_t *ctx,
         return mbedtls_cipher_get_base(ctx->cipher_info)->setkey_enc_func(ctx->cipher_ctx, key,
                                                                           ctx->key_bitlen);
     }
-#if defined(MBEDTLS_CHACHAPOLY_C)
-    if ( ctx->cipher_info->type == MBEDTLS_CIPHER_CHACHA20_POLY1305 &&
-         iv_len != 12 )
-        return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
-#endif
 #endif
 
     return MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA;
@@ -1252,12 +1247,6 @@ int mbedtls_cipher_check_tag(mbedtls_cipher_context_t *ctx,
 
     /* Status to return on a non-authenticated algorithm. */
     ret = MBEDTLS_ERR_CIPHER_FEATURE_UNAVAILABLE;
-
-    /* Status to return on a non-authenticated algorithm. It would make sense
-     * to return MBEDTLS_ERR_CIPHER_INVALID_CONTEXT or perhaps
-     * MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA, but at the time I write this our
-     * unit tests assume 0. */
-    ret = 0;
 
 #if defined(MBEDTLS_GCM_C)
     if (MBEDTLS_MODE_GCM == ((mbedtls_cipher_mode_t) ctx->cipher_info->mode)) {

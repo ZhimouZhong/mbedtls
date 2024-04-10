@@ -1367,15 +1367,6 @@ component_test_psa_crypto_rsa_no_genprime() {
     make test
 }
 
-component_test_psa_crypto_rsa_no_genprime() {
-    msg "build: default config minus MBEDTLS_GENPRIME"
-    scripts/config.py unset MBEDTLS_GENPRIME
-    make
-
-    msg "test: default config minus MBEDTLS_GENPRIME"
-    make test
-}
-
 component_test_ref_configs () {
     msg "test/build: ref-configs (ASan build)" # ~ 6 min 20s
     # test-ref-configs works by overwriting mbedtls_config.h; this makes cmake

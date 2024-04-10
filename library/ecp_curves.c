@@ -14,7 +14,6 @@
 #include "mbedtls/ecp.h"
 #include "mbedtls/platform_util.h"
 #include "mbedtls/error.h"
-#include "mbedtls/bn_mul.h"
 
 #include "bn_mul.h"
 #include "bignum_core.h"
@@ -4720,8 +4719,6 @@ int mbedtls_ecp_group_load(mbedtls_ecp_group *grp, mbedtls_ecp_group_id id)
     mbedtls_ecp_group_free(grp);
 
     mbedtls_ecp_group_init(grp);
-
-    mbedtls_ecp_group_init( grp );
 
     grp->id = id;
 

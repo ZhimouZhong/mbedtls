@@ -4317,10 +4317,6 @@ exit:
 
     mbedtls_free(buf);
 
-    rng_free( &rng );
-
-    mbedtls_free( buf );
-
 #if defined(MBEDTLS_TEST_HOOKS)
     /* Let test hooks detect errors such as resource leaks.
      * Don't do it in query_config mode, because some test code prints

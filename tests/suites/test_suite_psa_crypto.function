@@ -61,14 +61,6 @@ exit:
 }
 #endif
 
-/* If this comes up, it's a bug in the test code or in the test data. */
-#define UNUSED 0xdeadbeef
-
-/* Assert that an operation is (not) active.
- * This serves as a proxy for checking if the operation is aborted. */
-#define ASSERT_OPERATION_IS_ACTIVE(   operation ) TEST_ASSERT( operation.id != 0 )
-#define ASSERT_OPERATION_IS_INACTIVE( operation ) TEST_ASSERT( operation.id == 0 )
-
 /** An invalid export length that will never be set by psa_export_key(). */
 static const size_t INVALID_EXPORT_LENGTH = ~0U;
 
@@ -2609,28 +2601,6 @@ void asymmetric_signature_key_policy(int policy_usage_arg,
         }
     }
 
-    if( PSA_ALG_IS_SIGN_HASH( exercise_alg ) &&
-        PSA_ALG_IS_HASH( PSA_ALG_SIGN_GET_HASH( exercise_alg ) ) )
-    {
-        status = psa_sign_message( key, exercise_alg,
-                                   payload, payload_length,
-                                   signature, sizeof( signature ),
-                                   &signature_length );
-        if( compatible_alg && ( expected_usage & PSA_KEY_USAGE_SIGN_MESSAGE ) != 0 )
-            PSA_ASSERT( status );
-        else
-            TEST_EQUAL( status, PSA_ERROR_NOT_PERMITTED );
-
-        memset( signature, 0, sizeof( signature ) );
-        status = psa_verify_message( key, exercise_alg,
-                                     payload, payload_length,
-                                     signature, sizeof( signature ) );
-        if( compatible_alg && ( expected_usage & PSA_KEY_USAGE_VERIFY_MESSAGE ) != 0 )
-            TEST_EQUAL( status, PSA_ERROR_INVALID_SIGNATURE );
-        else
-            TEST_EQUAL( status, PSA_ERROR_NOT_PERMITTED );
-    }
-
 exit:
     psa_destroy_key(key);
     PSA_DONE();
@@ -3265,16 +3235,6 @@ void hash_bad_order()
     ASSERT_OPERATION_IS_INACTIVE(operation);
     PSA_ASSERT(psa_hash_abort(&operation));
     ASSERT_OPERATION_IS_INACTIVE(operation);
-
-    /* Check that update calls abort on error. */
-    PSA_ASSERT( psa_hash_setup( &operation, alg ) );
-    operation.id = UINT_MAX;
-    ASSERT_OPERATION_IS_ACTIVE( operation );
-    TEST_EQUAL( psa_hash_update( &operation, input, sizeof( input ) ),
-                PSA_ERROR_BAD_STATE );
-    ASSERT_OPERATION_IS_INACTIVE( operation );
-    PSA_ASSERT( psa_hash_abort( &operation ) );
-    ASSERT_OPERATION_IS_INACTIVE( operation );
 
     /* Call update after finish. */
     PSA_ASSERT(psa_hash_setup(&operation, alg));

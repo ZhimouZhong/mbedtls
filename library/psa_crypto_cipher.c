@@ -356,7 +356,6 @@ static psa_status_t psa_cipher_setup(
 exit:
     return mbedtls_to_psa_error(ret);
 }
-#endif /* MBEDTLS_PSA_BUILTIN_ALG_ECB_NO_PADDING */
 
 psa_status_t mbedtls_psa_cipher_encrypt_setup(
     mbedtls_psa_cipher_operation_t *operation,

@@ -98,10 +98,6 @@ ifdef BUILD_DLOPEN
 APPS +=	test/dlopen
 endif
 
-ifdef BUILD_DLOPEN
-APPS +=	test/dlopen
-endif
-
 ifdef TEST_CPP
 APPS += test/cpp_dummy_build
 endif

@@ -24,36 +24,6 @@
 
 #include "mbedtls/config_adjust_psa_superset_legacy.h"
 
-
-
-/****************************************************************/
-/* De facto synonyms */
-/****************************************************************/
-
-#if defined(PSA_WANT_ALG_ECDSA_ANY) && !defined(PSA_WANT_ALG_ECDSA)
-#define PSA_WANT_ALG_ECDSA PSA_WANT_ALG_ECDSA_ANY
-#elif !defined(PSA_WANT_ALG_ECDSA_ANY) && defined(PSA_WANT_ALG_ECDSA)
-#define PSA_WANT_ALG_ECDSA_ANY PSA_WANT_ALG_ECDSA
-#endif
-
-#if defined(PSA_WANT_ALG_RSA_PKCS1V15_SIGN_RAW) && !defined(PSA_WANT_ALG_RSA_PKCS1V15_SIGN)
-#define PSA_WANT_ALG_RSA_PKCS1V15_SIGN PSA_WANT_ALG_RSA_PKCS1V15_SIGN_RAW
-#elif !defined(PSA_WANT_ALG_RSA_PKCS1V15_SIGN_RAW) && defined(PSA_WANT_ALG_RSA_PKCS1V15_SIGN)
-#define PSA_WANT_ALG_RSA_PKCS1V15_SIGN_RAW PSA_WANT_ALG_RSA_PKCS1V15_SIGN
-#endif
-
-#if defined(PSA_WANT_ALG_RSA_PSS_ANY_SALT) && !defined(PSA_WANT_ALG_RSA_PSS)
-#define PSA_WANT_ALG_RSA_PSS PSA_WANT_ALG_RSA_PSS_ANY_SALT
-#elif !defined(PSA_WANT_ALG_RSA_PSS_ANY_SALT) && defined(PSA_WANT_ALG_RSA_PSS)
-#define PSA_WANT_ALG_RSA_PSS_ANY_SALT PSA_WANT_ALG_RSA_PSS
-#endif
-
-
-
-/****************************************************************/
-/* Require built-in implementations based on PSA requirements */
-/****************************************************************/
-
 #if defined(MBEDTLS_PSA_CRYPTO_CONFIG)
 
 /* Require built-in implementations based on PSA requirements */
@@ -63,12 +33,6 @@
 #include "psa/crypto_adjust_config_key_pair_types.h"
 
 #include "mbedtls/config_adjust_legacy_from_psa.h"
-
-
-
-/****************************************************************/
-/* Infer PSA requirements from Mbed TLS capabilities */
-/****************************************************************/
 
 #else /* MBEDTLS_PSA_CRYPTO_CONFIG */
 

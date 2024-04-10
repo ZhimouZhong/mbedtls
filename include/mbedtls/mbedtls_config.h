@@ -4011,29 +4011,6 @@
  */
 //#define MBEDTLS_IGNORE_RETURN( result ) ((void) !(result))
 
-/** \def MBEDTLS_CHECK_RETURN
- *
- * This macro is used at the beginning of the declaration of a function
- * to indicate that its return value should be checked. It should
- * instruct the compiler to emit a warning or an error if the function
- * is called without checking its return value.
- *
- * There is a default implementation for popular compilers in platform_util.h.
- * You can override the default implementation by defining your own here.
- *
- * If the implementation here is empty, this will effectively disable the
- * checking of functions' return values.
- */
-//#define MBEDTLS_CHECK_RETURN __attribute__((__warn_unused_result__))
-
-/** \def MBEDTLS_IGNORE_RETURN
- *
- * This macro requires one argument, which should be a C function call.
- * If that function call would cause a #MBEDTLS_CHECK_RETURN warning, this
- * warning is suppressed.
- */
-//#define MBEDTLS_IGNORE_RETURN( result ) ((void) !(result))
-
 /* PSA options */
 /**
  * Use HMAC_DRBG with the specified hash algorithm for HMAC_DRBG for the
@@ -4157,17 +4134,6 @@
 
 //#define MBEDTLS_PSK_MAX_LEN               32 /**< Max size of TLS pre-shared keys, in bytes (default 256 or 384 bits) */
 //#define MBEDTLS_SSL_COOKIE_TIMEOUT        60 /**< Default expiration delay of DTLS cookies, in seconds if HAVE_TIME, or in number of cookies issued */
-
-/** \def MBEDTLS_TLS_EXT_CID
- *
- * At the time of writing, the CID extension has not been assigned its
- * final value. Set this configuration option to make Mbed TLS use a
- * different value.
- *
- * A future minor revision of Mbed TLS may change the default value of
- * this option to match evolving standards and usage.
- */
-//#define MBEDTLS_TLS_EXT_CID                        254
 
 /**
  * Complete list of ciphersuites to use, in order of preference.

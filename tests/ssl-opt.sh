@@ -84,14 +84,6 @@ else
     O_NEXT_CLI=false
 fi
 
-if [ -n "${OPENSSL_NEXT:-}" ]; then
-    O_NEXT_SRV="$OPENSSL_NEXT s_server -www -cert data_files/server5.crt -key data_files/server5.key"
-    O_NEXT_CLI="echo 'GET / HTTP/1.0' | $OPENSSL_NEXT s_client"
-else
-    O_NEXT_SRV=false
-    O_NEXT_CLI=false
-fi
-
 if [ -n "${GNUTLS_NEXT_SERV:-}" ]; then
     G_NEXT_SRV="$GNUTLS_NEXT_SERV --x509certfile data_files/server5.crt --x509keyfile data_files/server5.key"
     G_NEXT_SRV_NO_CERT="$GNUTLS_NEXT_SERV"
@@ -644,75 +636,6 @@ requires_pk_alg() {
     esac
 }
 
-requires_certificate_authentication () {
-    if [ "$PSK_ONLY" = "YES" ]; then
-        SKIP_NEXT="YES"
-    fi
-}
-
-adapt_cmd_for_psk () {
-    case "$2" in
-        *openssl*) s='-psk abc123 -nocert';;
-        *gnutls-*) s='--pskkey=abc123';;
-        *) s='psk=abc123';;
-    esac
-    eval $1='"$2 $s"'
-    unset s
-}
-
-# maybe_adapt_for_psk [RUN_TEST_OPTION...]
-# If running in a PSK-only build, maybe adapt the test to use a pre-shared key.
-#
-# If not running in a PSK-only build, do nothing.
-# If the test looks like it doesn't use a pre-shared key but can run with a
-# pre-shared key, pass a pre-shared key. If the test looks like it can't run
-# with a pre-shared key, skip it. If the test looks like it's already using
-# a pre-shared key, do nothing.
-#
-# This code does not consider builds with ECDHE-PSK or RSA-PSK.
-#
-# Inputs:
-# * $CLI_CMD, $SRV_CMD, $PXY_CMD: client/server/proxy commands.
-# * $PSK_ONLY: YES if running in a PSK-only build (no asymmetric key exchanges).
-# * "$@": options passed to run_test.
-#
-# Outputs:
-# * $CLI_CMD, $SRV_CMD: may be modified to add PSK-relevant arguments.
-# * $SKIP_NEXT: set to YES if the test can't run with PSK.
-maybe_adapt_for_psk() {
-    if [ "$PSK_ONLY" != "YES" ]; then
-        return
-    fi
-    if [ "$SKIP_NEXT" = "YES" ]; then
-        return
-    fi
-    case "$CLI_CMD $SRV_CMD" in
-        *[-_\ =]psk*|*[-_\ =]PSK*)
-            return;;
-        *force_ciphersuite*)
-            # The test case forces a non-PSK cipher suite. In some cases, a
-            # PSK cipher suite could be substituted, but we're not ready for
-            # that yet.
-            SKIP_NEXT="YES"
-            return;;
-        *\ auth_mode=*|*[-_\ =]crt[_=]*)
-            # The test case involves certificates. PSK won't do.
-            SKIP_NEXT="YES"
-            return;;
-    esac
-    adapt_cmd_for_psk CLI_CMD "$CLI_CMD"
-    adapt_cmd_for_psk SRV_CMD "$SRV_CMD"
-}
-
-case " $CONFIGS_ENABLED " in
-    *\ MBEDTLS_KEY_EXCHANGE_[^P]*) PSK_ONLY="NO";;
-    *\ MBEDTLS_KEY_EXCHANGE_P[^S]*) PSK_ONLY="NO";;
-    *\ MBEDTLS_KEY_EXCHANGE_PS[^K]*) PSK_ONLY="NO";;
-    *\ MBEDTLS_KEY_EXCHANGE_PSK[^_]*) PSK_ONLY="NO";;
-    *\ MBEDTLS_KEY_EXCHANGE_PSK_ENABLED\ *) PSK_ONLY="YES";;
-    *) PSK_ONLY="NO";;
-esac
-
 # skip next test if OpenSSL doesn't support FALLBACK_SCSV
 requires_openssl_with_fallback_scsv() {
     if [ -z "${OPENSSL_HAS_FBSCSV:-}" ]; then
@@ -897,19 +820,6 @@ requires_gnutls_record_size_limit() {
     fi
 }
 
-requires_openssl_next() {
-    if [ -z "${OPENSSL_NEXT_AVAILABLE:-}" ]; then
-        if which "${OPENSSL_NEXT:-}" >/dev/null 2>&1; then
-            OPENSSL_NEXT_AVAILABLE="YES"
-        else
-            OPENSSL_NEXT_AVAILABLE="NO"
-        fi
-    fi
-    if [ "$OPENSSL_NEXT_AVAILABLE" = "NO" ]; then
-        SKIP_NEXT="YES"
-    fi
-}
-
 # skip next test if IPv6 isn't available on this host
 requires_ipv6() {
     if [ -z "${HAS_IPV6:-}" ]; then
@@ -1022,32 +932,6 @@ record_outcome() {
     fi
 }
 unset TEST_SUITE_NAME
-
-# True if the presence of the given pattern in a log definitely indicates
-# that the test has failed. False if the presence is inconclusive.
-#
-# Inputs:
-# * $1: pattern found in the logs
-# * $TIMES_LEFT: >0 if retrying is an option
-#
-# Outputs:
-# * $outcome: set to a retry reason if the pattern is inconclusive,
-#             unchanged otherwise.
-# * Return value: 1 if the pattern is inconclusive,
-#                 0 if the failure is definitive.
-log_pattern_presence_is_conclusive() {
-    # If we've run out of attempts, then don't retry no matter what.
-    if [ $TIMES_LEFT -eq 0 ]; then
-        return 0
-    fi
-    case $1 in
-        "resend")
-            # An undesired resend may have been caused by the OS dropping or
-            # delaying a packet at an inopportune time.
-            outcome="RETRY(resend)"
-            return 1;;
-    esac
-}
 
 # True if the presence of the given pattern in a log definitely indicates
 # that the test has failed. False if the presence is inconclusive.

@@ -307,6 +307,7 @@ typedef struct mbedtls_x509_san_list {
 mbedtls_x509_san_list;
 
 /** \} name Structures for parsing X.509 certificates, CRLs and CSRs */
+/** \} addtogroup x509_module */
 
 /**
  * \brief          Store the certificate DN in printable form into buf;

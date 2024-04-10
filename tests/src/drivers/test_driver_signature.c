@@ -319,8 +319,7 @@ psa_status_t mbedtls_test_opaque_signature_verify_message(
 
 psa_status_t mbedtls_test_transparent_signature_sign_hash(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer,
-    size_t key_buffer_size,
+    const uint8_t *key_buffer, size_t key_buffer_size,
     psa_algorithm_t alg,
     const uint8_t *hash, size_t hash_length,
     uint8_t *signature, size_t signature_size, size_t *signature_length)

@@ -22,11 +22,6 @@
 
 #include <string.h>
 
-#undef HAVE_SHA384
-#if defined(MBEDTLS_SHA512_C) && !defined(MBEDTLS_SHA512_NO_SHA384)
-#define HAVE_SHA384
-#endif
-
 /*
  * Ordered from most preferred to least preferred in terms of security.
  *

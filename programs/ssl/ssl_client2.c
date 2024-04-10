@@ -3199,8 +3199,6 @@ exit:
 
     rng_free(&rng);
 
-    rng_free( &rng );
-
 #if defined(MBEDTLS_TEST_HOOKS)
     if (test_hooks_failure_detected()) {
         if (ret == 0) {

@@ -247,6 +247,7 @@ class ChangeLog:
         for category in STANDARD_CATEGORIES:
             self.categories[category] = ''
         offset = (self.header + self.top_version_title).count('\n') + 1
+
         self.add_categories_from_text(input_stream.name, offset,
                                       top_version_body, True)
 

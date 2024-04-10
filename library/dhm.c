@@ -218,7 +218,7 @@ cleanup:
 }
 
 /*
- * Pick a random R in the range [2, M-2] for blinding or key generation.
+ * Setup and write the ServerKeyExchange parameters
  */
 int mbedtls_dhm_make_params(mbedtls_dhm_context *ctx, int x_size,
                             unsigned char *output, size_t *olen,

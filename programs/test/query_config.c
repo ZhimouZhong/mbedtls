@@ -93,10 +93,6 @@
                                                        (STRINGIFY(macro) "")[0] != 0 ? "=" STRINGIFY( \
                                                            macro) : "")
 
-#define STRINGIFY(macro)  #macro
-#define OUTPUT_MACRO_NAME_VALUE(macro) mbedtls_printf( #macro "%s\n",   \
-    ( STRINGIFY(macro) "" )[0] != 0 ? "=" STRINGIFY(macro) : "" )
-
 #if defined(_MSC_VER)
 /*
  * Visual Studio throws the warning 4003 because many Mbed TLS feature macros
@@ -2279,38 +2275,6 @@ int query_config(const char *config)
         return( 0 );
     }
 #endif /* MBEDTLS_PSA_CRYPTO_STRUCT_FILE */
-
-#if defined(MBEDTLS_CONFIG_FILE)
-    if( strcmp( "MBEDTLS_CONFIG_FILE", config ) == 0 )
-    {
-        MACRO_EXPANSION_TO_STR( MBEDTLS_CONFIG_FILE );
-        return( 0 );
-    }
-#endif /* MBEDTLS_CONFIG_FILE */
-
-#if defined(MBEDTLS_USER_CONFIG_FILE)
-    if( strcmp( "MBEDTLS_USER_CONFIG_FILE", config ) == 0 )
-    {
-        MACRO_EXPANSION_TO_STR( MBEDTLS_USER_CONFIG_FILE );
-        return( 0 );
-    }
-#endif /* MBEDTLS_USER_CONFIG_FILE */
-
-#if defined(MBEDTLS_PSA_CRYPTO_CONFIG_FILE)
-    if( strcmp( "MBEDTLS_PSA_CRYPTO_CONFIG_FILE", config ) == 0 )
-    {
-        MACRO_EXPANSION_TO_STR( MBEDTLS_PSA_CRYPTO_CONFIG_FILE );
-        return( 0 );
-    }
-#endif /* MBEDTLS_PSA_CRYPTO_CONFIG_FILE */
-
-#if defined(MBEDTLS_PSA_CRYPTO_USER_CONFIG_FILE)
-    if( strcmp( "MBEDTLS_PSA_CRYPTO_USER_CONFIG_FILE", config ) == 0 )
-    {
-        MACRO_EXPANSION_TO_STR( MBEDTLS_PSA_CRYPTO_USER_CONFIG_FILE );
-        return( 0 );
-    }
-#endif /* MBEDTLS_PSA_CRYPTO_USER_CONFIG_FILE */
 
 #if defined(MBEDTLS_MPI_WINDOW_SIZE)
     if( strcmp( "MBEDTLS_MPI_WINDOW_SIZE", config ) == 0 )

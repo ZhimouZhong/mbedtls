@@ -66,7 +66,6 @@
 #include "mbedtls/threading.h"
 #include "mbedtls/platform_util.h"
 #include "mbedtls/error.h"
-#include "mbedtls/bn_mul.h"
 
 #include "bn_mul.h"
 #include "ecp_invasive.h"
@@ -3518,10 +3517,6 @@ static int self_test_adjust_exponent(const mbedtls_ecp_group *grp,
 cleanup:
     return ret;
 }
-
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
 
 /* Calculate R = m.P for each m in exponents. Check that the number of
  * basic operations doesn't depend on the value of m. */

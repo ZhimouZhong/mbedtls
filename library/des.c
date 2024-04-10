@@ -856,8 +856,6 @@ int mbedtls_des_self_test(int verbose)
                            (u == 0) ? ' ' : '3', 56 + u * 56,
                            (v == MBEDTLS_DES_DECRYPT) ? "dec" : "enc");
         }
-        if( ret != 0 )
-            goto exit;
 
         memcpy(buf, des3_test_buf, 8);
 
@@ -938,8 +936,6 @@ int mbedtls_des_self_test(int verbose)
                            (u == 0) ? ' ' : '3', 56 + u * 56,
                            (v == MBEDTLS_DES_DECRYPT) ? "dec" : "enc");
         }
-        if( ret != 0 )
-            goto exit;
 
         memcpy(iv,  des3_test_iv,  8);
         memcpy(prv, des3_test_iv,  8);

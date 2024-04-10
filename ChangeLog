@@ -1123,7 +1123,6 @@ Security
    * Zeroize dynamically-allocated buffers used by the PSA Crypto key storage
      module before freeing them. These buffers contain secret key material, and
      could thus potentially leak the key through freed heap.
-
    * Fix potential memory leak inside mbedtls_ssl_cache_set() with
      an invalid session id length.
    * Add the platform function mbedtls_setbuf() to allow buffering to be
@@ -1181,6 +1180,8 @@ Bugfix
      mbedtls_md_starts(). Fixes #2227.
    * Fix compile errors when MBEDTLS_HAVE_TIME is not defined. Add tests
      to catch bad uses of time.h.
+   * Fix a race condition in out-of-source builds with CMake when generated data
+     files are already present. Fixes #5374.
    * Fix the library search path when building a shared library with CMake
      on Windows.
    * Fix bug in the alert sending function mbedtls_ssl_send_alert_message()
@@ -1375,6 +1376,17 @@ Bugfix
    * Some failures of HMAC operations were ignored. These failures could only
      happen with an alternative implementation of the underlying hash module.
    * Fix the error returned by psa_generate_key() for a public key. Fixes #4551.
+   * Fix compile-time or run-time errors in PSA
+     AEAD functions when ChachaPoly is disabled. Fixes #5065.
+   * Remove PSA'a AEAD finish/verify output buffer limitation for GCM.
+     The requirement of minimum 15 bytes for output buffer in
+     psa_aead_finish() and psa_aead_verify() does not apply to the built-in
+     implementation of GCM.
+   * Move GCM's update output buffer length verification from PSA AEAD to
+     the built-in implementation of the GCM.
+     The requirement for output buffer size to be equal or greater then
+     input buffer size is valid only for the built-in implementation of GCM.
+     Alternative GCM implementations can process whole blocks only.
    * Fix the build of sample programs when neither MBEDTLS_ERROR_C nor
      MBEDTLS_ERROR_STRERROR_DUMMY is enabled.
    * Fix PSA_ALG_RSA_PSS verification accepting an arbitrary salt length.
@@ -1602,6 +1614,7 @@ Default behavior changes
      changed: curves and hashes weaker than 255 bits are no longer accepted
      by default. The default order in TLS now favors faster curves over larger
      curves.
+
 Requirement changes
    * The library now uses the %zu format specifier with the printf() family of
      functions, so requires a toolchain that supports it. This change does not
@@ -1769,6 +1782,13 @@ Bugfix
      than PSA_ERROR_INVALID_HANDLE when the identifier specified for the key
      to create is not valid, bringing them in line with version 1.0.0 of the
      specification. Fix #4271.
+   * Add printf function attributes to mbedtls_debug_print_msg to ensure we
+     get printf format specifier warnings.
+   * PSA functions other than psa_open_key now return PSA_ERROR_INVALID_HANDLE
+     rather than PSA_ERROR_DOES_NOT_EXIST for an invalid handle, bringing them
+     in line with version 1.0.0 of the specification. Fix #4162.
+   * Fix a bug in ECDSA that would cause it to fail when the hash is all-bits
+     zero. Fixes #1792
    * Fix some cases in the bignum module where the library constructed an
      unintended representation of the value 0 which was not processed
      correctly by some bignum operations. This could happen when
@@ -1786,6 +1806,9 @@ Bugfix
      where these are already defined, this can result in a compilation
      error.  Instead, assume that if they are defined, the values will
      be adequate to build Mbed TLS.
+   * With MBEDTLS_PSA_CRYPTO_C disabled, some functions were getting built
+     nonetheless, resulting in undefined reference errors when building a
+     shared library. Reported by Guillermo Garcia M. in #4411.
    * The cipher suite TLS-RSA-WITH-CAMELLIA-256-GCM-SHA384 was not available
      when SHA-1 was disabled and was offered when SHA-1 was enabled but SHA-384
      was disabled. Fix the dependency. Fixes #4472.
@@ -1873,6 +1896,21 @@ Changes
      now writing an empty string where it previously wrote one or more
      zero digits when operating from values constructed with an mpi_read
      function and some mpi operations.
+   * Add CMake package config generation for CMake projects consuming Mbed TLS.
+   * config.h has been split into build_info.h and mbedtls_config.h
+     build_info.h is intended to be included from C code directly, while
+     mbedtls_config.h is intended to be edited by end users wishing to
+     change the build configuration, and should generally only be included from
+     build_info.h.
+   * The handling of MBEDTLS_CONFIG_FILE has been moved into build_info.h.
+   * A config file version symbol, MBEDTLS_CONFIG_VERSION was introduced.
+     Defining it to a particular value will ensure that Mbed TLS interprets
+     the config file in a way that's compatible with the config file format
+     used by the Mbed TLS release whose MBEDTLS_VERSION_NUMBER has the same
+     value.
+     The only value supported by Mbed TLS 3.0.0 is 0x03000000.
+   * Various changes to which alert and/or error code may be returned
+   * during the TLS handshake.
    * Implicitly add PSA_KEY_USAGE_SIGN_MESSAGE key usage policy flag when
      PSA_KEY_USAGE_SIGN_HASH flag is set and PSA_KEY_USAGE_VERIFY_MESSAGE flag
      when PSA_KEY_USAGE_VERIFY_HASH flag is set. This usage flag extension
@@ -2080,7 +2118,7 @@ Security
      Johan Malmgren and Johan Uppman Bruce from Sectra.
 
 Bugfix
-   * Fix an invalid (but non-zero) return code from mbedtls_pk_parse_subpubkey()
+   * Fix an invalid (but nonzero) return code from mbedtls_pk_parse_subpubkey()
      when the input has trailing garbage. Fixes #2512.
    * Fix build failure in configurations where MBEDTLS_USE_PSA_CRYPTO is
      enabled but ECDSA is disabled. Contributed by jdurkop. Fixes #3294.

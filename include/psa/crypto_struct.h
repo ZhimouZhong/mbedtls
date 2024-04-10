@@ -365,15 +365,6 @@ static inline void psa_extend_key_usage_flags(psa_key_usage_t *usage_flags)
     }
 }
 
-static inline void psa_extend_key_usage_flags( psa_key_usage_t *usage_flags )
-{
-    if( *usage_flags & PSA_KEY_USAGE_SIGN_HASH )
-        *usage_flags |= PSA_KEY_USAGE_SIGN_MESSAGE;
-
-    if( *usage_flags & PSA_KEY_USAGE_VERIFY_HASH )
-        *usage_flags |= PSA_KEY_USAGE_VERIFY_MESSAGE;
-}
-
 static inline void psa_set_key_usage_flags(psa_key_attributes_t *attributes,
                                            psa_key_usage_t usage_flags)
 {

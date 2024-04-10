@@ -1020,7 +1020,8 @@
     __asm   mov     s, esi
 
 #endif /* SSE2 */
-#endif /* (MSVC && _M_IX86) || __WATCOMC__ */
+#endif /* MSVC */
+
 #endif /* MBEDTLS_HAVE_ASM */
 
 #if !defined(MULADDC_X1_CORE)

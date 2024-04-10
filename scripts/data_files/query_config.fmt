@@ -93,10 +93,6 @@
                                                        (STRINGIFY(macro) "")[0] != 0 ? "=" STRINGIFY( \
                                                            macro) : "")
 
-#define STRINGIFY(macro)  #macro
-#define OUTPUT_MACRO_NAME_VALUE(macro) mbedtls_printf( #macro "%s\n",   \
-    ( STRINGIFY(macro) "" )[0] != 0 ? "=" STRINGIFY(macro) : "" )
-
 #if defined(_MSC_VER)
 /*
  * Visual Studio throws the warning 4003 because many Mbed TLS feature macros

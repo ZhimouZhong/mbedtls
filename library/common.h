@@ -27,8 +27,6 @@
 #define MBEDTLS_HAVE_NEON_INTRINSICS
 #endif
 
-#include <stdint.h>
-
 /** Helper to define a function as static except when building invasive tests.
  *
  * If a function is only used inside its own source file and should be

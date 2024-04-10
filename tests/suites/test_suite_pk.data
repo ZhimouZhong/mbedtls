@@ -666,7 +666,7 @@ PSA wrapped sign: SECP192K1
 depends_on:MBEDTLS_PK_CAN_ECDSA_SIGN:MBEDTLS_ECP_HAVE_SECP192K1
 pk_psa_sign:PSA_KEY_TYPE_ECC_KEY_PAIR(PSA_ECC_FAMILY_SECP_K1):192:0
 
-## Currently buggy: https://github.com/Mbed-TLS/mbed-crypto/issues/336
+## Currently buggy: https://github.com/ARMmbed/mbed-crypto/issues/336
 # PSA wrapped sign: SECP224K1
 # depends_on:MBEDTLS_PK_CAN_ECDSA_SIGN:MBEDTLS_ECP_HAVE_SECP224K1
 # pk_psa_sign:PSA_KEY_TYPE_ECC_KEY_PAIR(PSA_ECC_FAMILY_SECP_K1):224:0

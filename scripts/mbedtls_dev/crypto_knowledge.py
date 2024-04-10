@@ -65,58 +65,6 @@ class EllipticCurveCategory(enum.Enum):
         return EllipticCurveCategory.SHORT_WEIERSTRASS
 
 
-
-def short_expression(original: str, level: int = 0) -> str:
-    """Abbreviate the expression, keeping it human-readable.
-
-    If `level` is 0, just remove parts that are implicit from context,
-    such as a leading ``PSA_KEY_TYPE_``.
-    For larger values of `level`, also abbreviate some names in an
-    unambiguous, but ad hoc way.
-    """
-    short = original
-    short = re.sub(r'\bPSA_(?:ALG|ECC_FAMILY|KEY_[A-Z]+)_', r'', short)
-    short = re.sub(r' +', r'', short)
-    if level >= 1:
-        short = re.sub(r'PUBLIC_KEY\b', r'PUB', short)
-        short = re.sub(r'KEY_PAIR\b', r'PAIR', short)
-        short = re.sub(r'\bBRAINPOOL_P', r'BP', short)
-        short = re.sub(r'\bMONTGOMERY\b', r'MGM', short)
-        short = re.sub(r'AEAD_WITH_SHORTENED_TAG\b', r'AEAD_SHORT', short)
-        short = re.sub(r'\bDETERMINISTIC_', r'DET_', short)
-        short = re.sub(r'\bKEY_AGREEMENT\b', r'KA', short)
-        short = re.sub(r'_PSK_TO_MS\b', r'_PSK2MS', short)
-    return short
-
-
-BLOCK_CIPHERS = frozenset(['AES', 'ARIA', 'CAMELLIA', 'DES'])
-BLOCK_MAC_MODES = frozenset(['CBC_MAC', 'CMAC'])
-BLOCK_CIPHER_MODES = frozenset([
-    'CTR', 'CFB', 'OFB', 'XTS', 'CCM_STAR_NO_TAG',
-    'ECB_NO_PADDING', 'CBC_NO_PADDING', 'CBC_PKCS7',
-])
-BLOCK_AEAD_MODES = frozenset(['CCM', 'GCM'])
-
-class EllipticCurveCategory(enum.Enum):
-    """Categorization of elliptic curve families.
-
-    The category of a curve determines what algorithms are defined over it.
-    """
-
-    SHORT_WEIERSTRASS = 0
-    MONTGOMERY = 1
-    TWISTED_EDWARDS = 2
-
-    @staticmethod
-    def from_family(family: str) -> 'EllipticCurveCategory':
-        if family == 'PSA_ECC_FAMILY_MONTGOMERY':
-            return EllipticCurveCategory.MONTGOMERY
-        if family == 'PSA_ECC_FAMILY_TWISTED_EDWARDS':
-            return EllipticCurveCategory.TWISTED_EDWARDS
-        # Default to SW, which most curves belong to.
-        return EllipticCurveCategory.SHORT_WEIERSTRASS
-
-
 class KeyType:
     """Knowledge about a PSA key type."""
 

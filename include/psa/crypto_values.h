@@ -502,10 +502,6 @@
  * ARIA block cipher. */
 #define PSA_KEY_TYPE_ARIA                           ((psa_key_type_t) 0x2406)
 
-/** Key for a cipher, AEAD or MAC algorithm based on the
- * ARIA block cipher. */
-#define PSA_KEY_TYPE_ARIA                           ((psa_key_type_t)0x2406)
-
 /** Key for a cipher or MAC algorithm based on DES or 3DES (Triple-DES).
  *
  * The size of the key can be 64 bits (single DES), 128 bits (2-key 3DES) or
@@ -769,11 +765,6 @@
     (((type) & PSA_KEY_TYPE_CATEGORY_MASK) == PSA_KEY_TYPE_CATEGORY_SYMMETRIC ? \
      1u << PSA_GET_KEY_TYPE_BLOCK_SIZE_EXPONENT(type) :                         \
         0u)
-
-/* Note that algorithm values are embedded in the persistent key store,
- * as part of key metadata. As a consequence, they must not be changed
- * (unless the storage format version changes).
- */
 
 /* Note that algorithm values are embedded in the persistent key store,
  * as part of key metadata. As a consequence, they must not be changed
@@ -2611,26 +2602,6 @@ static inline int mbedtls_svc_key_id_is_null(mbedtls_svc_key_id_t key)
  * For a key pair, this concerns the public key.
  */
 #define PSA_KEY_USAGE_VERIFY_MESSAGE            ((psa_key_usage_t) 0x00000800)
-
-/** Whether the key may be used to sign a message.
- *
- * This flag allows the key to be used for a MAC calculation operation or for
- * an asymmetric message signature operation, if otherwise permitted by the
- * key’s type and policy.
- *
- * For a key pair, this concerns the private key.
- */
-#define PSA_KEY_USAGE_SIGN_MESSAGE              ((psa_key_usage_t)0x00000400)
-
-/** Whether the key may be used to verify a message.
- *
- * This flag allows the key to be used for a MAC verification operation or for
- * an asymmetric message signature verification operation, if otherwise
- * permitted by the key’s type and policy.
- *
- * For a key pair, this concerns the public key.
- */
-#define PSA_KEY_USAGE_VERIFY_MESSAGE            ((psa_key_usage_t)0x00000800)
 
 /** Whether the key may be used to sign a message.
  *

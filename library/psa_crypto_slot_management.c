@@ -435,6 +435,7 @@ psa_status_t psa_get_and_lock_key_slot(mbedtls_svc_key_id_t key,
                                       PSA_SLOT_FULL);
         status = psa_register_read(*p_slot);
     }
+
 #else /* MBEDTLS_PSA_CRYPTO_STORAGE_C || MBEDTLS_PSA_CRYPTO_BUILTIN_KEYS */
     status = PSA_ERROR_INVALID_HANDLE;
 #endif /* MBEDTLS_PSA_CRYPTO_STORAGE_C || MBEDTLS_PSA_CRYPTO_BUILTIN_KEYS */
