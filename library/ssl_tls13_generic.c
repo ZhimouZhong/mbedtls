@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  TLS 1.3 functionality shared between client and server
  *
  *  Copyright The Mbed TLS Contributors
@@ -576,6 +576,7 @@ int mbedtls_ssl_tls13_parse_certificate(mbedtls_ssl_context *ssl,
             }
 
             switch (extension_type) {
+                case 0:
                 default:
                     MBEDTLS_SSL_PRINT_EXT(
                         3, MBEDTLS_SSL_HS_CERTIFICATE,

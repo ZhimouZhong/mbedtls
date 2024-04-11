@@ -203,6 +203,7 @@ int mbedtls_ecdh_setup(mbedtls_ecdh_context *ctx, mbedtls_ecp_group_id grp_id)
             ctx->grp_id = grp_id;
             return mbedtls_everest_setup(&ctx->ctx.everest_ecdh, grp_id);
 #endif
+        case 0:
         default:
             ctx->point_format = MBEDTLS_ECP_PF_UNCOMPRESSED;
             ctx->var = MBEDTLS_ECDH_VARIANT_MBEDTLS_2_0;

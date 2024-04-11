@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Functions to delegate cryptographic operations to an available
  *  and appropriate accelerator.
  *  Warning: This file is now auto-generated.
@@ -111,7 +111,7 @@ psa_status_t psa_driver_wrapper_get_key_buffer_size(
             return( ( *key_buffer_size != 0 ) ?
                     PSA_SUCCESS : PSA_ERROR_NOT_SUPPORTED );
 #endif /* PSA_CRYPTO_DRIVER_TEST */
-
+        case 0:
         default:
             (void)key_type;
             (void)key_bits;
@@ -243,6 +243,7 @@ psa_status_t psa_driver_wrapper_get_builtin_key(
 
 
 #endif /* PSA_CRYPTO_ACCELERATOR_DRIVER_PRESENT */
+        case 0:
         default:
             (void) slot_number;
             (void) key_buffer;
